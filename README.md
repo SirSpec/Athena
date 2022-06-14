@@ -1,6 +1,10 @@
-# Athena - Dawid Jachowicz Blog
+# Athena
 
-[![pages-build-deployment](https://github.com/SirSpec/Athena/actions/workflows/pages/pages-build-deployment/badge.svg?branch=master)](https://github.com/SirSpec/Athena/actions/workflows/pages/pages-build-deployment)
+Blog
+
+# Tech stack
+- .NET 6
+- ASP.NET Core
 
 # License
 [MIT](./LICENSE) © [Dawid Jachowicz](https://github.com/SirSpec)
