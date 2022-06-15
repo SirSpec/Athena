@@ -1,0 +1,18 @@
+﻿@model PostTeaserViewModel
+
+<div onmouseenter="onCardHover('@Model.Url')" onmouseleave="onCardHover('@Model.Url')">
+    <header>
+        @Model.PublishingDate
+        <h2 id="Cards">
+            <a asp-controller="home" asp-action="post" asp-route-url="@Model.Url">@Model.Title</a>
+        </h2>
+    </header>
+    <div class="progress-bar progress-bar-no-arrow">
+        <div id="@Model.Id" class="progress-bar-filled" style="width: 0%"></div>
+    </div>
+    <div class="terminal-card" onclick="onCardClick('@Model.Url')" style="cursor: pointer;">
+        <div class="row">
+            @Model.Description
+        </div>
+    </div>
+</div>
