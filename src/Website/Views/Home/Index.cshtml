@@ -1,0 +1,15 @@
+﻿@model HomeViewModel
+
+<section>
+    <div class="terminal-timeline">
+        @foreach (var postTeaser in Model.PostTeasers)
+        {
+            @await Html.PartialAsync("_PostTeaser", postTeaser)
+
+            @if (postTeaser != Model.PostTeasers.Last())
+            {
+                <hr>
+            }
+        }
+    </div>
+</section>
