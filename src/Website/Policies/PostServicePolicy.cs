@@ -18,4 +18,27 @@ public class PostServicePolicyFactory
                         .GetRequiredService<ILogger<PostService>>()
                         .LogError(
                             $"Connection to API failed. Delaying for {timespan.TotalMilliseconds}ms, retry:{retryAttempt}."));
+
+    public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IServiceCollection services)
+    {
+        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<PostService>>();
+
+        return HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .CircuitBreakerAsync(
+                handledEventsAllowedBeforeBreaking: 3,
+                durationOfBreak: TimeSpan.FromMinutes(1),
+                onBreak: (result, timeSpan, context) =>
+                {
+                    logger.LogError($"Connection to API is onBreak for {timeSpan.TotalMilliseconds}ms.");
+                },
+                onHalfOpen: () =>
+                {
+                    logger.LogError($"Connection to API is onBreak again.");
+                },
+                onReset: context =>
+                {
+                    logger.LogInformation($"Connection to API have been reset.");
+                });
+    }
 }
