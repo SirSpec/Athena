@@ -1,5 +1,10 @@
 ﻿@model HomeViewModel
 
+@section Styles
+{
+<link rel="stylesheet" href="/css/card-teaser.css" asp-append-version="true" />
+}
+
 <section>
     <div class="terminal-timeline">
         @foreach (var postTeaser in Model.PostTeasers)
