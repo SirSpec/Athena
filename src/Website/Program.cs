@@ -17,14 +17,11 @@ builder.Services
         configureClient.DefaultRequestHeaders.Add("User-Agent", "request");
         configureClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 
-        if (builder.Environment.IsDevelopment())
-        {
-            var apiOptions = builder.Configuration
-                .GetSection(nameof(ApiOptions))
-                .Get<ApiOptions>();
+        var apiOptions = builder.Configuration
+            .GetSection(nameof(ApiOptions))
+            .Get<ApiOptions>();
 
-            configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiOptions.AccessToken}");
-        }
+        configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiOptions.AccessToken}");
     })
     .SetHandlerLifetime(TimeSpan.FromMinutes(5))
     .AddPolicyHandler(PostServicePolicyFactory.GetRetryPolicy(builder.Services))
