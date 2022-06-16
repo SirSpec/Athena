@@ -15,18 +15,19 @@
     <link rel="stylesheet" href="~/css/simple-grid.min.css" />
     <link rel="stylesheet" href="~/css/terminal.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/87840bdaec.js" crossorigin="anonymous"></script>
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>
-    <div class="container">
+    <div class="container justify">
         <partial name="_Header" />
 
         @RenderBody()
 
         <partial name="_Footer" />
     </div>
-    <script src="https://kit.fontawesome.com/3532967935.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
