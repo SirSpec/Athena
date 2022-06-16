@@ -4,6 +4,6 @@ namespace Website.Services;
 
 public interface IPostService
 {
-    IAsyncEnumerable<PostTeaserViewModel> GetPostTeasers();
-    Task<PostViewModel> GetPost(string url);
+    IAsyncEnumerable<PostTeaserViewModel> GetPostTeasersViewModelAsync();
+    Task<PostViewModel> GetPostViewModelAsync(string url);
 }

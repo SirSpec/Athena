@@ -1,49 +1,52 @@
 using Microsoft.AspNetCore.Html;
-using Microsoft.Extensions.Options;
+using Website.Extensions;
 using Website.Models;
-using Website.Options;
+using Website.Constants;
+using Website.Repositories;
+using Website.Services.Interpreters;
 
 namespace Website.Services;
 
 public class PostService : IPostService
 {
-    private readonly HttpClient _httpClient;
-    private readonly ApiOptions _apiOptions;
+    private readonly IPostRepository _postRepository;
+    private readonly IPostInterpreter _postInterpreter;
 
-    public PostService(HttpClient httpClient, IOptions<ApiOptions> apiOptions)
+    public PostService(
+        IPostRepository postRepository,
+        IPostInterpreter postInterpreter)
     {
-        _httpClient = httpClient;
-        _apiOptions = apiOptions.Value;
+        _postRepository = postRepository;
+        _postInterpreter = postInterpreter;
     }
 
-    public async IAsyncEnumerable<PostTeaserViewModel> GetPostTeasers()
+    public async IAsyncEnumerable<PostTeaserViewModel> GetPostTeasersViewModelAsync()
     {
-        var posts = await _httpClient.GetFromJsonAsync<IEnumerable<ContentItem>>(_apiOptions.ContentPath)
-            ?? Enumerable.Empty<ContentItem>();
+        var posts = await _postRepository.GetPostTeasersAsync();
 
-        foreach (var item in posts)
+        foreach (var post in posts)
         {
-            var postContent = await _httpClient.GetStringAsync(item.DownloadUrl);
+            var postContent = await _postRepository.GetPostDataAsync(post.Name ?? string.Empty);
+
             yield return new PostTeaserViewModel
             {
-                Id = item.Sha ?? string.Empty,
-                PublishingDate = new HtmlString(DateTime.Now.ToShortDateString()),
-                Title = new HtmlString(item.Name),
-                Description = new HtmlString(postContent),
-                Url = new HtmlString(item.DownloadUrl)
+                Name = new HtmlString(post.Name),
+                PublishingDate = _postInterpreter.Interpret(postContent, Tokens.PublishingDate).ToHtmlString(),
+                Title = _postInterpreter.Interpret(postContent, Tokens.Title).ToHtmlString(),
+                Description = _postInterpreter.Interpret(postContent, Tokens.Description).ToHtmlString()
             };
         }
     }
 
-    public async Task<PostViewModel> GetPost(string url)
+    public async Task<PostViewModel> GetPostViewModelAsync(string name)
     {
-        var postContent = await _httpClient.GetStringAsync(url);
+        var postData = await _postRepository.GetPostDataAsync(name);
 
         return new PostViewModel
         {
-            PublishingDate = new HtmlString(DateTime.Now.ToShortDateString()),
-            Title = new HtmlString(url),
-            Description = new HtmlString(postContent),
+            PublishingDate = _postInterpreter.Interpret(postData, Tokens.PublishingDate).ToHtmlString(),
+            Title = _postInterpreter.Interpret(postData, Tokens.Title).ToHtmlString(),
+            Body = _postInterpreter.Interpret(postData, Tokens.Body).ToHtmlString()
         };
     }
 }
