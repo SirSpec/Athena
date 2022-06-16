@@ -29,7 +29,7 @@ steps:
     displayName: Run Unit tests
     inputs:
       command: 'test'
-      testRunTitle: 'Fides'
+      testRunTitle: 'Athena'
       arguments: '--configuration $(buildConfiguration)'
   - task: DotNetCoreCLI@2
     displayName: Create and publish packages
@@ -42,6 +42,6 @@ steps:
     displayName: Publish Artifacts
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'Fides'
+      ArtifactName: 'Athena'
       publishLocation: 'Container'
   
