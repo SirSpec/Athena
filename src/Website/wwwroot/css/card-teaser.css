@@ -1,0 +1,7 @@
+.post-teaser {
+  cursor: pointer;
+}
+
+.post-teaser:hover .progress-bar-filled {
+  width: 100%;
+}
