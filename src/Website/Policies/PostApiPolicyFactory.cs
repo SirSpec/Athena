@@ -1,27 +1,27 @@
 using System.Net;
 using Polly;
 using Polly.Extensions.Http;
-using Website.Services;
+using Website.Repositories;
 
 namespace Website.Policies;
 
-public class PostServicePolicyFactory
+public class PostApiPolicyFactory
 {
     public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services) =>
         HttpPolicyExtensions
             .HandleTransientHttpError()
             .OrResult(message => message.StatusCode == HttpStatusCode.NotFound)
-            .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                 onRetry: (outcome, timespan, retryAttempt, context) =>
                     services
                         .BuildServiceProvider()
-                        .GetRequiredService<ILogger<PostService>>()
+                        .GetRequiredService<ILogger<PostRepository>>()
                         .LogError(
-                            $"Connection to API failed. Delaying for {timespan.TotalMilliseconds}ms, retry:{retryAttempt}."));
+                            $"Connecting to API failed. Delaying for {timespan.TotalMilliseconds}ms, retry:{retryAttempt}."));
 
     public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IServiceCollection services)
     {
-        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<PostService>>();
+        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<PostRepository>>();
 
         return HttpPolicyExtensions
             .HandleTransientHttpError()
@@ -38,7 +38,7 @@ public class PostServicePolicyFactory
                 },
                 onReset: context =>
                 {
-                    logger.LogInformation($"Connection to API have been reset.");
+                    logger.LogInformation($"Connection to API has been reset.");
                 });
     }
 }
