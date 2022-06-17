@@ -2,9 +2,11 @@ namespace Website.Models;
 
 public class ErrorViewModel
 {
-    public string? ErrorCode { get; set; }
+    public string ErrorCode { get; set; } = string.Empty;
 
-    public string? RequestId { get; set; }
+    public bool ShowErrorCode =>
+        string.IsNullOrWhiteSpace(ErrorCode) is false;
 
-    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    public string PageTitleSuffix =>
+        ShowErrorCode ? $" - {ErrorCode}" : string.Empty;
 }

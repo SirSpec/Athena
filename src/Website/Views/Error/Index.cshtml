@@ -1,17 +1,19 @@
 ﻿@model ErrorViewModel
 @{
-    ViewData["Title"] = $"{ViewData["Title"]} - Error";
+    ViewData["Title"] = $"{ViewData["Title"]}{Model.PageTitleSuffix}";
 }
 
 <div>
-    <header>
-        <h2 id="Cards">@Model.ErrorCode</h2>
-    </header>
+    @if (Model.ShowErrorCode)
+    {
+        <header>
+            <h2 id="Cards">@Model.ErrorCode</h2>
+        </header>
+    }
     <div class="terminal-card">
         <div class="row">
-            <p>An error occurred while processing your request.</p>
-
-            (╯°□°）╯︵ ┻━┻
+            <p>An error occurred while processing your request. ¯\(°_°)/¯</p>
+            <p>Please wait a few minutes before you try again.</p>
         </div>
     </div>
 </div>
