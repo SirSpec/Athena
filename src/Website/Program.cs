@@ -1,10 +1,9 @@
 using Website.Options;
-using Website.Policies;
-using Website.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOptions<ApiOptions>()
+builder.Services
+    .AddOptions<ApiOptions>()
     .Configure<IConfiguration>((settings, configuration) => configuration
         .GetSection(nameof(ApiOptions))
         .Bind(settings));
@@ -12,22 +11,8 @@ builder.Services.AddOptions<ApiOptions>()
 builder.Services.AddControllersWithViews();
 
 builder.Services
-    .AddHttpClient<IPostRepository, PostRepository>(configureClient =>
-    {
-        configureClient.DefaultRequestHeaders.Add("User-Agent", "request");
-        configureClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-
-        var apiOptions = builder.Configuration
-            .GetSection(nameof(ApiOptions))
-            .Get<ApiOptions>();
-
-        configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiOptions.AccessToken}");
-    })
-    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-    .AddPolicyHandler(PostServicePolicyFactory.GetRetryPolicy(builder.Services))
-    .AddPolicyHandler(PostServicePolicyFactory.GetCircuitBreakerPolicy(builder.Services));
-
-builder.Services.AddDependencies();
+    .AddHttpClient(builder.Configuration)
+    .AddDependencies();
 
 var app = builder.Build();
 
