@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Website.Models;
 using Website.Services;
+using Website.Services.Validators;
 
 namespace Website.Controllers;
 
@@ -14,12 +15,10 @@ public class PostController : Controller
         _postService = postService;
 
     [Route("{name}")]
-    public async Task<IActionResult> Index([Required] string name)
-    {
-        var viewModel = await _postService.GetPostViewModelAsync(name);
-
-        return viewModel != PostViewModel.Empty
+    public async Task<IActionResult> Index([RegularExpression(PostValidator.PostNameRegexPattern)] string name) =>
+        ModelState.IsValid &&
+        await _postService.GetPostViewModelAsync(name) is PostViewModel viewModel &&
+        viewModel != PostViewModel.Empty
             ? View(viewModel)
             : RedirectPreserveMethod("/error/404");
-    }
 }
