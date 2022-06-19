@@ -4,6 +4,7 @@
 
 Blog posts have to created according to the convention:
 - Unique file name and is stored inside `posts` directory
+- A file name has to match the following regex pattern `^[A-Za-z][A-Za-z\d-]*[A-Za-z\d]$`
 - Use the following tokens:
     - Title
     - PublishingDate
@@ -12,6 +13,7 @@ Blog posts have to created according to the convention:
 - Posts can contain HTML tags
 
 ### Example blog post:
+Name: `example-post`
 ```
 {Title}
 Example
