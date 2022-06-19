@@ -11,6 +11,7 @@ public class PostApiPolicyFactory
         HttpPolicyExtensions
             .HandleTransientHttpError()
             .OrResult(message => message.StatusCode == HttpStatusCode.NotFound)
+            .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
             .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                 onRetry: (outcome, timespan, retryAttempt, context) =>
                     services
@@ -25,6 +26,7 @@ public class PostApiPolicyFactory
 
         return HttpPolicyExtensions
             .HandleTransientHttpError()
+            .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
             .CircuitBreakerAsync(
                 handledEventsAllowedBeforeBreaking: 3,
                 durationOfBreak: TimeSpan.FromMinutes(1),
