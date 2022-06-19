@@ -1,9 +1,7 @@
-using Website.Extensions;
 using Website.Models;
-using Website.Constants;
 using Website.Repositories;
-using Website.Services.Interpreters;
 using Microsoft.Extensions.Caching.Memory;
+using Website.Services.Mappers;
 
 namespace Website.Services;
 
@@ -11,16 +9,16 @@ public class PostService : IPostService
 {
     private readonly IMemoryCache _memoryCache;
     private readonly IPostRepository _postRepository;
-    private readonly IPostInterpreter _postInterpreter;
+    private readonly IPostMapper _postMapper;
 
     public PostService(
         IMemoryCache memoryCache,
         IPostRepository postRepository,
-        IPostInterpreter postInterpreter)
+        IPostMapper postMapper)
     {
         _memoryCache = memoryCache;
         _postRepository = postRepository;
-        _postInterpreter = postInterpreter;
+        _postMapper = postMapper;
     }
 
     public async Task<IEnumerable<PostTeaserViewModel>> GetPostTeasersViewModelAsync() =>
@@ -47,12 +45,7 @@ public class PostService : IPostService
                 if (string.IsNullOrWhiteSpace(postData) is false)
                 {
                     cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
-                    return new PostViewModel
-                    {
-                        PublishingDate = _postInterpreter.Interpret(postData, Tokens.PublishingDate).ToHtmlString(),
-                        Title = _postInterpreter.Interpret(postData, Tokens.Title).ToHtmlString(),
-                        Body = _postInterpreter.Interpret(postData, Tokens.Body).ToHtmlString()
-                    };
+                    return _postMapper.MapPostData(postData);
                 }
                 else
                 {
@@ -67,15 +60,8 @@ public class PostService : IPostService
 
         foreach (var post in posts)
         {
-            var postContent = await _postRepository.GetPostDataAsync(post.Name);
-
-            yield return new PostTeaserViewModel
-            {
-                Name = post.Name.ToHtmlString(),
-                PublishingDate = _postInterpreter.Interpret(postContent, Tokens.PublishingDate).ToHtmlString(),
-                Title = _postInterpreter.Interpret(postContent, Tokens.Title).ToHtmlString(),
-                Description = _postInterpreter.Interpret(postContent, Tokens.Description).ToHtmlString()
-            };
+            var postData = await _postRepository.GetPostDataAsync(post.Name);
+            yield return _postMapper.MapPostTeaserData(post.Name, postData);
         }
     }
 }
