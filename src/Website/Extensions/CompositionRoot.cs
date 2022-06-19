@@ -3,6 +3,8 @@ using Website.Policies;
 using Website.Repositories;
 using Website.Services;
 using Website.Services.Interpreters;
+using Website.Services.Mappers;
+using Website.Services.Validators;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +13,8 @@ public static class CompositionRoot
     public static IServiceCollection AddDependencies(this IServiceCollection services) =>
         services
             .AddScoped<IPostInterpreter, PostInterpreter>()
+            .AddScoped<IPostValidator, PostValidator>()
+            .AddScoped<IPostMapper, PostMapper>()
             .AddScoped<IPostService, PostService>();
 
     public static IServiceCollection AddHttpClient(this IServiceCollection services, IConfiguration configuration)
