@@ -19,19 +19,18 @@ public static class CompositionRoot
 
     public static IServiceCollection AddHttpClient(this IServiceCollection services, IConfiguration configuration)
     {
+        var apiOptions = configuration
+                    .GetSection(nameof(ApiOptions))
+                    .Get<ApiOptions>();
+
         services
             .AddHttpClient<IPostRepository, PostRepository>(configureClient =>
             {
                 configureClient.DefaultRequestHeaders.Add("User-Agent", "request");
                 configureClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-
-                var apiOptions = configuration
-                    .GetSection(nameof(ApiOptions))
-                    .Get<ApiOptions>();
-
                 configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiOptions.AccessToken}");
             })
-            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+            .SetHandlerLifetime(TimeSpan.FromMinutes(apiOptions.HttpMessageHandlerLifeTime))
             .AddPolicyHandler(PostApiPolicyFactory.GetRetryPolicy(services))
             .AddPolicyHandler(PostApiPolicyFactory.GetCircuitBreakerPolicy(services));
 
