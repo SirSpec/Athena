@@ -2,20 +2,25 @@ using Website.Models;
 using Website.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 using Website.Services.Mappers;
+using Website.Options;
+using Microsoft.Extensions.Options;
 
 namespace Website.Services;
 
 public class PostService : IPostService
 {
+    private readonly CacheOptions _cacheOptions;
     private readonly IMemoryCache _memoryCache;
     private readonly IPostRepository _postRepository;
     private readonly IPostMapper _postMapper;
 
     public PostService(
+        IOptions<CacheOptions> cacheOptions,
         IMemoryCache memoryCache,
         IPostRepository postRepository,
         IPostMapper postMapper)
     {
+        _cacheOptions = cacheOptions.Value;
         _memoryCache = memoryCache;
         _postRepository = postRepository;
         _postMapper = postMapper;
@@ -29,8 +34,8 @@ public class PostService : IPostService
                 var teasers = await GetPostTeasersAsync().ToListAsync();
 
                 cacheEntry.AbsoluteExpirationRelativeToNow = teasers.Any()
-                    ? TimeSpan.FromDays(1)
-                    : TimeSpan.FromSeconds(30);
+                    ? TimeSpan.FromDays(_cacheOptions.AbsoluteExpirationRelativeToNowOk)
+                    : TimeSpan.FromSeconds(_cacheOptions.AbsoluteExpirationRelativeToNowNotFound);
 
                 return teasers;
             });
@@ -44,12 +49,12 @@ public class PostService : IPostService
 
                 if (string.IsNullOrWhiteSpace(postData) is false)
                 {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(_cacheOptions.AbsoluteExpirationRelativeToNowOk);
                     return _postMapper.MapPostData(postData);
                 }
                 else
                 {
-                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
+                    cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(_cacheOptions.AbsoluteExpirationRelativeToNowNotFound);
                     return PostViewModel.Empty;
                 }
             });
