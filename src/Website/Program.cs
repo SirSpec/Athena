@@ -2,17 +2,25 @@ using Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddAppConfiguration();
+
 builder.Services
     .AddOptions<ApiOptions>()
     .Configure<IConfiguration>((settings, configuration) => configuration
         .GetSection(nameof(ApiOptions))
         .Bind(settings));
 
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddOptions<CacheOptions>()
+    .Configure<IConfiguration>((settings, configuration) => configuration
+        .GetSection(nameof(CacheOptions))
+        .Bind(settings));
 
 builder.Services
     .AddHttpClient(builder.Configuration)
     .AddDependencies();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -33,6 +41,7 @@ app.UseCors(policy =>
     policy.WithOrigins(apiOptions);
 });
 
+app.UseAzureAppConfiguration();
 app.UseAuthorization();
 
 app.MapControllerRoute(
