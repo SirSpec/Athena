@@ -2,8 +2,6 @@ using Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAppConfiguration();
-
 builder.Services
     .AddOptions<ApiOptions>()
     .Configure<IConfiguration>((settings, configuration) => configuration
@@ -17,8 +15,8 @@ builder.Services
         .Bind(settings));
 
 builder.Services
-    .AddHttpClient(builder.Configuration)
-    .AddDependencies();
+    .AddDependencies()
+    .AddHttpClient(builder.Configuration);
 
 builder.Services.AddControllersWithViews();
 
@@ -41,7 +39,6 @@ app.UseCors(policy =>
     policy.WithOrigins(apiOptions);
 });
 
-app.UseAzureAppConfiguration();
 app.UseAuthorization();
 
 app.MapControllerRoute(
