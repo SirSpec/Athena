@@ -2,6 +2,8 @@ using Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddAppConfiguration();
+
 builder.Services
     .AddOptions<ApiOptions>()
     .Configure<IConfiguration>((settings, configuration) => configuration

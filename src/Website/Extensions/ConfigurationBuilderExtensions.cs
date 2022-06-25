@@ -8,6 +8,7 @@ public static class ConfigurationBuilderExtensions
     {
         var configuration = configurationBuilder.Build();
         var connectionString = configuration.GetConnectionString("AppConfigurationService");
+
         return string.IsNullOrWhiteSpace(connectionString) is false
             ? configurationBuilder.AddAzureAppConfiguration(options =>
             {
