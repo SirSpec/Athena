@@ -1,10 +1,11 @@
 ﻿@model ErrorViewModel
 @{
-    ViewData["Title"] = $"{ViewData["Title"]}{Model.PageTitleSuffix}";
+    ViewData["Title"] = $"{ViewData["Title"]}{Model?.PageTitleSuffix ?? string.Empty}";
 }
 
+
 <div>
-    @if (Model.ShowErrorCode)
+    @if (Model?.ShowErrorCode is true)
     {
         <header>
             <h2 id="Cards">@Model.ErrorCode</h2>

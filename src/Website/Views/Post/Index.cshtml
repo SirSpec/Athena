@@ -1,11 +1,14 @@
 ﻿@model PostViewModel
 
-<section>
-  <header>
-    <span>@Model.PublishingDate</span>
-    <h1>@Model.Title</h1>
-    <p>
-        @Model.Body
-    </p>
-  </header>
-</section>
+@if(Model is not null)
+{
+    <section>
+        <header>
+            <span>@Model.PublishingDate</span>
+            <h1>@Model.Title</h1>
+            <p>
+                @Model.Body
+            </p>
+        </header>
+    </section>
+}

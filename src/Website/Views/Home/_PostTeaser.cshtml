@@ -1,18 +1,21 @@
 ﻿@model PostTeaserViewModel
 
-<div class="post-teaser" onclick="window.location.href='/post/@Model.Name';">
-    <header>
-        @Model.PublishingDate
-        <h2 id="Cards">
-            <a asp-controller="post" asp-action="index" asp-route-name="@Model.Name">@Model.Title</a>
-        </h2>
-    </header>
-    <div class="progress-bar progress-bar-no-arrow">
-        <div id="@Model.Name" class="progress-bar-filled"></div>
-    </div>
-    <div class="terminal-card">
-        <div class="row">
-            @Model.Description
+@if(Model is not null)
+{
+    <div class="post-teaser" onclick="window.location.href='/post/@Model.Name';">
+        <header>
+            @Model.PublishingDate
+            <h2 id="Cards">
+                <a asp-controller="post" asp-action="index" asp-route-name="@Model.Name">@Model.Title</a>
+            </h2>
+        </header>
+        <div class="progress-bar progress-bar-no-arrow">
+            <div id="@Model.Name" class="progress-bar-filled"></div>
+        </div>
+        <div class="terminal-card">
+            <div class="row">
+                @Model.Description
+            </div>
         </div>
     </div>
-</div>
+}
