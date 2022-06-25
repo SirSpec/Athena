@@ -15,13 +15,18 @@ public static class CompositionRoot
             .AddScoped<IPostInterpreter, PostInterpreter>()
             .AddScoped<IPostValidator, PostValidator>()
             .AddScoped<IPostMapper, PostMapper>()
-            .AddScoped<IPostService, PostService>();
+            .AddScoped<IPostService, PostService>()
+            .AddScoped<IPostApiPolicyFactory, PostApiPolicyFactory>();
 
     public static IServiceCollection AddHttpClient(this IServiceCollection services, IConfiguration configuration)
     {
         var apiOptions = configuration
-                    .GetSection(nameof(ApiOptions))
-                    .Get<ApiOptions>();
+            .GetSection(nameof(ApiOptions))
+            .Get<ApiOptions>();
+
+        var policyFactory = services
+            .BuildServiceProvider()
+            .GetRequiredService<IPostApiPolicyFactory>();
 
         services
             .AddHttpClient<IPostRepository, PostRepository>(configureClient =>
@@ -31,8 +36,8 @@ public static class CompositionRoot
                 configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiOptions.AccessToken}");
             })
             .SetHandlerLifetime(TimeSpan.FromMinutes(apiOptions.HttpMessageHandlerLifeTime))
-            .AddPolicyHandler(PostApiPolicyFactory.GetRetryPolicy(services))
-            .AddPolicyHandler(PostApiPolicyFactory.GetCircuitBreakerPolicy(services));
+            .AddPolicyHandler(policyFactory.GetRetryPolicy())
+            .AddPolicyHandler(policyFactory.GetCircuitBreakerPolicy());
 
         return services;
     }
