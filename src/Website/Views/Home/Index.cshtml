@@ -5,16 +5,19 @@
 <link rel="stylesheet" href="/css/card-teaser.css" asp-append-version="true" />
 }
 
-<section>
-    <div class="terminal-timeline">
-        @foreach (var postTeaser in Model.PostTeasers)
-        {
-            @await Html.PartialAsync("_PostTeaser", postTeaser)
-
-            @if (postTeaser != Model.PostTeasers.Last())
+@if(Model is not null)
+{
+    <section>
+        <div class="terminal-timeline">
+            @foreach (var postTeaser in Model.PostTeasers)
             {
-                <hr>
+                @await Html.PartialAsync("_PostTeaser", postTeaser)
+
+                @if (postTeaser != Model.PostTeasers.Last())
+                {
+                    <hr>
+                }
             }
-        }
-    </div>
-</section>
+        </div>
+    </section>
+}
