@@ -1,46 +1,55 @@
 using System.Net;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
+using Website.Options;
 using Website.Repositories;
 
 namespace Website.Policies;
 
-public class PostApiPolicyFactory
+public class PostApiPolicyFactory : IPostApiPolicyFactory
 {
-    public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(IServiceCollection services) =>
+    private readonly ILogger<PostRepository> _postRepositoryLogger;
+    private readonly ApiOptions _apiOptions;
+
+    public PostApiPolicyFactory(
+        ILogger<PostRepository> postRepositoryLogger,
+        IOptions<ApiOptions> apiOptions)
+    {
+        _postRepositoryLogger = postRepositoryLogger;
+        _apiOptions = apiOptions.Value;
+    }
+
+    public IAsyncPolicy<HttpResponseMessage> GetRetryPolicy() =>
         HttpPolicyExtensions
             .HandleTransientHttpError()
             .OrResult(message => message.StatusCode == HttpStatusCode.NotFound)
             .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
-            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+            .WaitAndRetryAsync(_apiOptions.RetryCount, retryAttempt => GetExponentialBackoff(retryAttempt),
                 onRetry: (outcome, timespan, retryAttempt, context) =>
-                    services
-                        .BuildServiceProvider()
-                        .GetRequiredService<ILogger<PostRepository>>()
-                        .LogError(
-                            $"Connecting to API failed. Delaying for {timespan.TotalMilliseconds}ms, retry:{retryAttempt}."));
+                    _postRepositoryLogger.LogError(
+                        $"Connecting to API failed. Delaying for {timespan.TotalMilliseconds}ms, retry:{retryAttempt}."));
 
-    public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy(IServiceCollection services)
-    {
-        var logger = services.BuildServiceProvider().GetRequiredService<ILogger<PostRepository>>();
-
-        return HttpPolicyExtensions
+    public IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy() =>
+        HttpPolicyExtensions
             .HandleTransientHttpError()
             .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
             .CircuitBreakerAsync(
-                handledEventsAllowedBeforeBreaking: 3,
-                durationOfBreak: TimeSpan.FromMinutes(1),
+                handledEventsAllowedBeforeBreaking: _apiOptions.HandledEventsAllowedBeforeBreaking,
+                durationOfBreak: TimeSpan.FromMinutes(_apiOptions.DurationOfBreak),
                 onBreak: (result, timeSpan, context) =>
                 {
-                    logger.LogError($"Connection to API is onBreak for {timeSpan.TotalMilliseconds}ms.");
+                    _postRepositoryLogger.LogError($"Connection to API is onBreak for {timeSpan.TotalMilliseconds}ms.");
                 },
                 onHalfOpen: () =>
                 {
-                    logger.LogError($"Connection to API is onBreak again.");
+                    _postRepositoryLogger.LogError($"Connection to API is onBreak again.");
                 },
                 onReset: context =>
                 {
-                    logger.LogInformation($"Connection to API has been reset.");
+                    _postRepositoryLogger.LogInformation($"Connection to API has been reset.");
                 });
-    }
+
+    private TimeSpan GetExponentialBackoff(int retryAttempt) =>
+        TimeSpan.FromSeconds(Math.Pow(_apiOptions.BaseRetryDelay, retryAttempt));
 }
