@@ -2,7 +2,11 @@ using Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAppConfiguration();
+if(builder.Environment.IsProduction())
+{
+    builder.Configuration.AddAppConfiguration();
+    builder.Services.AddAzureAppConfiguration();
+}
 
 builder.Services
     .AddOptions<ApiOptions>()
@@ -28,6 +32,7 @@ if (app.Environment.IsProduction())
 {
     app.UseExceptionHandler("/error");
     app.UseHsts();
+    app.UseAzureAppConfiguration();
 }
 
 app.UseStatusCodePagesWithRedirects("/error/{0}");
