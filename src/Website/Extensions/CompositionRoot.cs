@@ -31,9 +31,14 @@ public static class CompositionRoot
         services
             .AddHttpClient<IPostRepository, PostRepository>(configureClient =>
             {
+                var accessToken = string.IsNullOrWhiteSpace(apiOptions.AccessToken) is false
+                    ? apiOptions.AccessToken
+                    : throw new InvalidOperationException(
+                        "Missing Access Token. Please specify it under ApiOptions:AccessToken config section.");
+
                 configureClient.DefaultRequestHeaders.Add("User-Agent", "request");
                 configureClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-                configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiOptions.AccessToken}");
+                configureClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
             })
             .SetHandlerLifetime(TimeSpan.FromMinutes(apiOptions.HttpMessageHandlerLifeTime))
             .AddPolicyHandler(policyFactory.GetRetryPolicy())
