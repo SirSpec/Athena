@@ -15,7 +15,7 @@ public class PostService : IPostService
     private readonly IPostMapper _postMapper;
 
     public PostService(
-        IOptions<CacheOptions> cacheOptions,
+        IOptionsSnapshot<CacheOptions> cacheOptions,
         IMemoryCache memoryCache,
         IPostRepository postRepository,
         IPostMapper postMapper)
