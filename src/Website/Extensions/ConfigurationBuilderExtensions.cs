@@ -20,7 +20,7 @@ public static class ConfigurationBuilderExtensions
                     .ConfigureRefresh(
                         configure => configure
                             .Register("CacheOptions:Sentinel", refreshAll: true)
-                            .SetCacheExpiration(TimeSpan.FromSeconds(appConfigurationOptions.CacheExpiration)));
+                            .SetCacheExpiration(TimeSpan.FromHours(appConfigurationOptions.CacheExpiration)));
             })
             : throw new InvalidOperationException("Invalid App Configuration options. ");
     }
