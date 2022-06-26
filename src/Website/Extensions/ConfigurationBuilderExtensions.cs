@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Website.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -6,19 +7,21 @@ public static class ConfigurationBuilderExtensions
 {
     public static IConfigurationBuilder AddAppConfiguration(this IConfigurationBuilder configurationBuilder)
     {
-        var configuration = configurationBuilder.Build();
-        var connectionString = configuration.GetConnectionString("AppConfigurationService");
+        var appConfigurationOptions = configurationBuilder
+            .Build()
+            .GetSection(nameof(AppConfigurationOptions))
+            .Get<AppConfigurationOptions>();
 
-        return string.IsNullOrWhiteSpace(connectionString) is false
+        return Uri.TryCreate(appConfigurationOptions.Endpoint, UriKind.Absolute, out var endpoint)
             ? configurationBuilder.AddAzureAppConfiguration(options =>
             {
-                var cacheExpiration = configuration.GetValue<int>("AppConfigurationOptions:CacheExpiration");
-                options.Connect(connectionString).ConfigureRefresh(
-                    configure => configure
-                        .Register(nameof(CacheOptions))
-                        .SetCacheExpiration(TimeSpan.FromHours(cacheExpiration))
-                );
+                options
+                    .Connect(endpoint, new ManagedIdentityCredential())
+                    .ConfigureRefresh(
+                        configure => configure
+                            .Register("CacheOptions:Sentinel", refreshAll: true)
+                            .SetCacheExpiration(TimeSpan.FromSeconds(appConfigurationOptions.CacheExpiration)));
             })
-            : configurationBuilder;
+            : throw new InvalidOperationException("Invalid App Configuration options. ");
     }
 }
