@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Website.Services.Interpreters;
+namespace Website.Domain.Interpreters;
 
 public class PostInterpreter : IPostInterpreter
 {
