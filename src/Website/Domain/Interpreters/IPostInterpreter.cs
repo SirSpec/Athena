@@ -1,4 +1,4 @@
-namespace Website.Services.Interpreters;
+namespace Website.Domain.Interpreters;
 
 public interface IPostInterpreter
 {
