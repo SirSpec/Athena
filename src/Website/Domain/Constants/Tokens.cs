@@ -1,4 +1,4 @@
-namespace Website.Constants;
+namespace Website.Domain.Constants;
 
 public static class Tokens
 {
