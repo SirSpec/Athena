@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Website.Domain.ValueObjects;
 using Website.Models;
 using Website.Services;
-using Website.Services.Validators;
 
 namespace Website.Controllers;
 
@@ -15,10 +16,8 @@ public class PostController : Controller
         _postService = postService;
 
     [Route("{name}")]
-    public async Task<IActionResult> Index([RegularExpression(PostValidator.PostNameRegexPattern)] string name) =>
-        ModelState.IsValid &&
-        await _postService.GetPostViewModelAsync(name) is PostViewModel viewModel &&
-        viewModel != PostViewModel.Empty
+    public async Task<IActionResult> Index([RegularExpression(PostName.ValueRegexPattern)] string name) =>
+        ModelState.IsValid && await _postService.GetPostViewModelAsync(name) is PostViewModel viewModel
             ? View(viewModel)
-            : RedirectPreserveMethod("/error/404");
+            : RedirectPreserveMethod($"/error/{((int)HttpStatusCode.BadRequest)}");
 }
