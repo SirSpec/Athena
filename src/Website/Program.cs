@@ -2,7 +2,7 @@ using Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if(builder.Environment.IsProduction())
+if (builder.Environment.IsProduction())
 {
     builder.Configuration.AddAppConfiguration();
     builder.Services.AddAzureAppConfiguration();
