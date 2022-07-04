@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Website.Models;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Website.Services;
 
 namespace Website.Controllers;
@@ -13,10 +13,10 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var viewModel = await _postService.GetPostTeasersViewModelAsync();
+        var viewModel = await _postService.GetHomeViewModelAsync();
 
-        return viewModel.Any()
-            ? View(new HomeViewModel { PostTeasers = viewModel })
-            : RedirectPreserveMethod("/error/404");
+        return viewModel.PostTeasers.Any()
+            ? View(viewModel)
+            : RedirectPreserveMethod($"/error/{((int)HttpStatusCode.NotFound)}");
     }
 }
