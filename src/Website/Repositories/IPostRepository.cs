@@ -1,9 +1,9 @@
-using Website.Repositories.Models;
+using Website.Domain.ValueObjects;
 
 namespace Website.Repositories;
 
 public interface IPostRepository
 {
-    Task<IEnumerable<ContentItem>> GetPostTeasersAsync();
-    Task<string> GetPostDataAsync(string url);
+    Task<IEnumerable<PostName>> GetPostNamesAsync();
+    Task<Post> GetPostAsync(PostName postName);
 }
