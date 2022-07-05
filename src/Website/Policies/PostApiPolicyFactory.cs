@@ -23,7 +23,6 @@ public class PostApiPolicyFactory : IPostApiPolicyFactory
     public IAsyncPolicy<HttpResponseMessage> GetRetryPolicy() =>
         HttpPolicyExtensions
             .HandleTransientHttpError()
-            .OrResult(message => message.StatusCode == HttpStatusCode.NotFound)
             .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
             .WaitAndRetryAsync(_apiOptions.RetryCount, retryAttempt => GetExponentialBackoff(retryAttempt),
                 onRetry: (outcome, timespan, retryAttempt, context) =>
@@ -33,10 +32,11 @@ public class PostApiPolicyFactory : IPostApiPolicyFactory
     public IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy() =>
         HttpPolicyExtensions
             .HandleTransientHttpError()
+            .OrResult(message => message.StatusCode == HttpStatusCode.NotFound)
             .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
             .CircuitBreakerAsync(
                 handledEventsAllowedBeforeBreaking: _apiOptions.HandledEventsAllowedBeforeBreaking,
-                durationOfBreak: TimeSpan.FromMinutes(_apiOptions.DurationOfBreak),
+                durationOfBreak: TimeSpan.FromMinutes(_apiOptions.DurationOfBreakInMinutes),
                 onBreak: (result, timeSpan, context) =>
                 {
                     _postRepositoryLogger.LogError($"Connection to API is onBreak for {timeSpan.TotalMilliseconds}ms.");
@@ -51,5 +51,5 @@ public class PostApiPolicyFactory : IPostApiPolicyFactory
                 });
 
     private TimeSpan GetExponentialBackoff(int retryAttempt) =>
-        TimeSpan.FromSeconds(Math.Pow(_apiOptions.BaseRetryDelay, retryAttempt));
+        TimeSpan.FromSeconds(Math.Pow(_apiOptions.BaseRetryDelayInSeconds, retryAttempt));
 }
