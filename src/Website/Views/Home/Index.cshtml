@@ -1,19 +1,19 @@
-﻿@model HomeViewModel
+﻿@model IEnumerable<PostTeaserViewModel>
 
 @section Styles
 {
 <link rel="stylesheet" href="/css/card-teaser.css" asp-append-version="true" />
 }
 
-@if(Model is not null)
+@if (Model is not null)
 {
     <section>
         <div class="terminal-timeline">
-            @foreach (var postTeaser in Model.PostTeasers)
+            @foreach (var postTeaser in Model)
             {
                 @await Html.PartialAsync("_PostTeaser", postTeaser)
 
-                @if (postTeaser != Model.PostTeasers.Last())
+                @if (postTeaser != Model.Last())
                 {
                     <hr>
                 }
