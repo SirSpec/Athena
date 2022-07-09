@@ -13,10 +13,10 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var viewModel = await _postService.GetHomeViewModelAsync();
+        var postTeasers = await _postService.GetPostTeaserViewModelsAsync();
 
-        return viewModel.PostTeasers.Any()
-            ? View(viewModel)
+        return postTeasers.Any()
+            ? View(postTeasers)
             : RedirectPreserveMethod($"/error/{((int)HttpStatusCode.NotFound)}");
     }
 }
