@@ -21,12 +21,12 @@ public class CachedPostService : IPostService
         _postService = postService;
     }
 
-    public async Task<HomeViewModel> GetHomeViewModelAsync() =>
-        await _memoryCache.GetOrCreateAsync<HomeViewModel>(
+    public async Task<IEnumerable<PostTeaserViewModel>> GetPostTeaserViewModelsAsync() =>
+        await _memoryCache.GetOrCreateAsync<IEnumerable<PostTeaserViewModel>>(
             "HomePage",
             async cacheEntry =>
             {
-                var teasers = await _postService.GetHomeViewModelAsync();
+                var teasers = await _postService.GetPostTeaserViewModelsAsync();
                 cacheEntry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(_cacheOptions.PostDataTimeToLiveInHours);
                 return teasers;
             });
