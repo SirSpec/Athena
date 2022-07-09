@@ -24,8 +24,8 @@ public class PostService : IPostService
         return _postMapper.MapPostData(postData);
     }
 
-    public async Task<HomeViewModel> GetHomeViewModelAsync() =>
-        new HomeViewModel { PostTeasers = await GetPostTeasersAsync().ToListAsync() };
+    public async Task<IEnumerable<PostTeaserViewModel>> GetPostTeaserViewModelsAsync() =>
+        await GetPostTeasersAsync().ToListAsync();
 
     private async IAsyncEnumerable<PostTeaserViewModel> GetPostTeasersAsync()
     {
