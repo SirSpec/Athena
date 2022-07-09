@@ -5,12 +5,13 @@ namespace Website.Domain.ValueObjects;
 
 public record Post
 {
-    private readonly IPostInterpreter _postInterpreter = new PostInterpreter();
     private readonly PostName _postName;
 
     public Post(PostName postName, string postData)
     {
         _postName = postName;
+
+        var _postInterpreter = new PostInterpreter();
         PublishingDate = _postInterpreter.Interpret(postData, Tokens.PublishingDate);
         Title = _postInterpreter.Interpret(postData, Tokens.Title);
         Description = _postInterpreter.Interpret(postData, Tokens.Description);
