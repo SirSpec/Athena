@@ -17,4 +17,8 @@
     <Content Update="appsettings.json" CopyToPublishDirectory="Always" /> 
     <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" /> 
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
 </Project>
