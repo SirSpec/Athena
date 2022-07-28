@@ -1,16 +1,16 @@
+using Athena.Domain.ValueObjects;
 using Xunit;
-using Website.Domain.ValueObjects;
 
-namespace WebsiteTest;
+namespace Athena.DomainTest;
 
 public class PostNameTest
 {
     [Theory]
     [InlineData("")]
     [InlineData("2test")]
-    public void IsNameValid_InvalidValue_False(string name)
+    public void IsValidFormat_InvalidValue_False(string name)
     {
-        var result = PostName.IsNameValid(name);
+        var result = PostName.IsValidFormat(name);
 
         Assert.False(result);
     }
@@ -19,9 +19,9 @@ public class PostNameTest
     [InlineData("test")]
     [InlineData("test-name")]
     [InlineData("test-name1")]
-    public void IsNameValid_ValidValue_True(string name)
+    public void IsValidFormat_ValidValue_True(string name)
     {
-        var result = PostName.IsNameValid(name);
+        var result = PostName.IsValidFormat(name);
 
         Assert.True(result);
     }
