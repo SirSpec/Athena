@@ -1,7 +1,7 @@
 using Xunit;
-using Website.Extensions;
+using Athena.Website.Extensions;
 
-namespace WebsiteTest;
+namespace Athena.WebsiteTest;
 
 public class StringExtensionsTest
 {
