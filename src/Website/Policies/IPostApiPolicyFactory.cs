@@ -1,6 +1,6 @@
 using Polly;
 
-namespace Website.Policies;
+namespace Athena.Website.Policies;
 
 public interface IPostApiPolicyFactory
 {

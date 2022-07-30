@@ -1,8 +1,8 @@
-using Website.Domain.ValueObjects;
-using Website.Extensions;
-using Website.Models;
+using Athena.Domain.Entities;
+using Athena.Website.Extensions;
+using Athena.Website.Models;
 
-namespace Website.Services.Mappers;
+namespace Athena.Website.Services.Mappers;
 
 public class PostMapper : IPostMapper
 {
@@ -17,7 +17,7 @@ public class PostMapper : IPostMapper
     public PostTeaserViewModel MapPostTeaserData(Post post) =>
         new PostTeaserViewModel
         {
-            Name = post.Name.ToHtmlString(),
+            Name = post.Id.ToHtmlString(),
             PublishingDate = post.PublishingDate.ToHtmlString(),
             Title = post.Title.ToHtmlString(),
             Description = post.Description.ToHtmlString()

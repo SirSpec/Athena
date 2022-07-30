@@ -2,10 +2,10 @@ using System.Net;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
-using Website.Options;
-using Website.Repositories;
+using Athena.Website.Options;
+using Athena.Website.Repositories;
 
-namespace Website.Policies;
+namespace Athena.Website.Policies;
 
 public class PostApiPolicyFactory : IPostApiPolicyFactory
 {

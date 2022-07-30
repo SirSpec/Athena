@@ -1,6 +1,6 @@
 using Azure.Identity;
-using Website.Extensions;
-using Website.Options;
+using Athena.Website.Extensions;
+using Athena.Website.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

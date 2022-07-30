@@ -1,10 +1,11 @@
+using Athena.Domain.Repositories;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Website.Options;
-using Website.Policies;
-using Website.Repositories;
-using Website.Services;
-using Website.Services.Mappers;
+using Athena.Website.Options;
+using Athena.Website.Policies;
+using Athena.Website.Repositories;
+using Athena.Website.Services;
+using Athena.Website.Services.Mappers;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -13,11 +14,11 @@ public static class CompositionRoot
     public static IServiceCollection AddDependencies(this IServiceCollection services) =>
         services
             .AddScoped<IPostMapper, PostMapper>()
-            .AddScoped<PostService>()
-            .AddScoped<IPostService, CachedPostService>(provider => new CachedPostService(
+            .AddScoped<PostViewModelService>()
+            .AddScoped<IPostViewModelService, CachedPostViewModelService>(provider => new CachedPostViewModelService(
                 provider.GetRequiredService<IOptionsSnapshot<CacheOptions>>(),
                 provider.GetRequiredService<IMemoryCache>(),
-                provider.GetRequiredService<PostService>()
+                provider.GetRequiredService<PostViewModelService>()
             ))
             .AddScoped<IPostApiPolicyFactory, PostApiPolicyFactory>();
 

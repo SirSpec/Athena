@@ -1,16 +1,16 @@
-using Website.Domain.ValueObjects;
-using Website.Models;
-using Website.Repositories;
-using Website.Services.Mappers;
+using Athena.Domain.Repositories;
+using Athena.Domain.ValueObjects;
+using Athena.Website.Models;
+using Athena.Website.Services.Mappers;
 
-namespace Website.Services;
+namespace Athena.Website.Services;
 
-public class PostService : IPostService
+public class PostViewModelService : IPostViewModelService
 {
     private readonly IPostRepository _postRepository;
     private readonly IPostMapper _postMapper;
 
-    public PostService(
+    public PostViewModelService(
         IPostRepository postRepository,
         IPostMapper postMapper)
     {
@@ -20,8 +20,8 @@ public class PostService : IPostService
 
     public async Task<PostViewModel> GetPostViewModelAsync(string name)
     {
-        var postData = await _postRepository.GetPostAsync(new PostName(name));
-        return _postMapper.MapPostData(postData);
+        var post = await _postRepository.GetPostAsync(new PostName(name));
+        return _postMapper.MapPostData(post);
     }
 
     public async Task<IEnumerable<PostTeaserViewModel>> GetPostTeaserViewModelsAsync() =>

@@ -1,4 +1,4 @@
-using Website.Options;
+using Athena.Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 

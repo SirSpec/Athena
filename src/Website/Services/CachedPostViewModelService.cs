@@ -1,20 +1,20 @@
-using Website.Models;
+using Athena.Website.Models;
 using Microsoft.Extensions.Caching.Memory;
-using Website.Options;
+using Athena.Website.Options;
 using Microsoft.Extensions.Options;
 
-namespace Website.Services;
+namespace Athena.Website.Services;
 
-public class CachedPostService : IPostService
+public class CachedPostViewModelService : IPostViewModelService
 {
     private readonly CacheOptions _cacheOptions;
     private readonly IMemoryCache _memoryCache;
-    private readonly IPostService _postService;
+    private readonly IPostViewModelService _postService;
 
-    public CachedPostService(
+    public CachedPostViewModelService(
         IOptionsSnapshot<CacheOptions> cacheOptions,
         IMemoryCache memoryCache,
-        IPostService postService)
+        IPostViewModelService postService)
     {
         _cacheOptions = cacheOptions.Value;
         _memoryCache = memoryCache;

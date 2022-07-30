@@ -1,4 +1,4 @@
-namespace Website.Options;
+namespace Athena.Website.Options;
 
 public class CacheOptions
 {

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Website.Repositories.Models;
+namespace Athena.Website.Repositories.Models;
 
 public class ContentItem
 {

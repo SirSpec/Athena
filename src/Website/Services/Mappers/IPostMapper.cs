@@ -1,7 +1,7 @@
-using Website.Domain.ValueObjects;
-using Website.Models;
+using Athena.Domain.Entities;
+using Athena.Website.Models;
 
-namespace Website.Services.Mappers;
+namespace Athena.Website.Services.Mappers;
 
 public interface IPostMapper
 {

@@ -1,8 +1,8 @@
-namespace Website.Models;
+namespace Athena.Website.Models;
 
 public class ErrorViewModel
 {
-    public string ErrorCode { get; set; } = string.Empty;
+    public string ErrorCode { get; init; } = string.Empty;
 
     public bool ShowErrorCode =>
         string.IsNullOrWhiteSpace(ErrorCode) is false;

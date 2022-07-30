@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Html;
 
-namespace Website.Models;
+namespace Athena.Website.Models;
 
 public class PostTeaserViewModel
 {

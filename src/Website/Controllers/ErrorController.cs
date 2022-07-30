@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Website.Models;
+using Athena.Website.Models;
 
-namespace Website.Controllers;
+namespace Athena.Website.Controllers;
 
 [Route("{controller}")]
 public class ErrorController : Controller

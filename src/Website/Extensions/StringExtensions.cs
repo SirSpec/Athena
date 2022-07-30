@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Html;
 
-namespace Website.Extensions;
+namespace Athena.Website.Extensions;
 
 public static class StringExtensions
 {

@@ -1,8 +1,8 @@
-using Website.Models;
+using Athena.Website.Models;
 
-namespace Website.Services;
+namespace Athena.Website.Services;
 
-public interface IPostService
+public interface IPostViewModelService
 {
     Task<IEnumerable<PostTeaserViewModel>> GetPostTeaserViewModelsAsync();
     Task<PostViewModel> GetPostViewModelAsync(string url);

@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Website.Services;
+using Athena.Website.Services;
 
-namespace Website.Controllers;
+namespace Athena.Website.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly IPostService _postService;
+    private readonly IPostViewModelService _postService;
 
-    public HomeController(IPostService postService) =>
+    public HomeController(IPostViewModelService postService) =>
         _postService = postService;
 
     public async Task<IActionResult> Index()

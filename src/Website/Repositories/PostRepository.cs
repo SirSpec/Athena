@@ -1,10 +1,12 @@
-using Website.Extensions;
+using Athena.Website.Extensions;
 using Microsoft.Extensions.Options;
-using Website.Options;
-using Website.Repositories.Models;
-using Website.Domain.ValueObjects;
+using Athena.Website.Options;
+using Athena.Website.Repositories.Models;
+using Athena.Domain.ValueObjects;
+using Athena.Domain.Entities;
+using Athena.Domain.Repositories;
 
-namespace Website.Repositories;
+namespace Athena.Website.Repositories;
 
 public class PostRepository : IPostRepository
 {
@@ -25,7 +27,7 @@ public class PostRepository : IPostRepository
         var contentItems = await _httpClient.GetFromJsonAsync<IEnumerable<ContentItem>>(uri);
 
         return contentItems?
-            .Where(contentItem => PostName.IsNameValid(contentItem.Name))
+            .Where(contentItem => PostName.IsValidFormat(contentItem.Name))
             .Select(contentItem => new PostName(contentItem.Name)) ?? Enumerable.Empty<PostName>();
     }
 
@@ -34,6 +36,6 @@ public class PostRepository : IPostRepository
         var uri = $"{_apiOptions.RawDataApiUrl}{postName.Value}".ToAbsoluteUri();
         var postData = await _httpClient.GetStringAsync(uri);
 
-        return new Post(postName, postData);
+        return new Post(postName, new PostBody(postData));
     }
 }
