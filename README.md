@@ -32,6 +32,7 @@ Example body.
 # Tech stack
 - .NET 6
 - ASP.NET Core
+- GitHub API
 
 # License
 [MIT](LICENSE) © [Dawid Jachowicz](https://github.com/SirSpec)
