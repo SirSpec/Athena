@@ -1,9 +1,8 @@
 using Xunit;
-using Athena.Website.Extensions;
 
 namespace Athena.WebsiteTest;
 
-public class StringExtensionsTest
+public class UriExtensionsTest
 {
     [Theory]
     [InlineData(null)]
