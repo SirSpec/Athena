@@ -29,6 +29,9 @@
 
         <partial name="_Footer" />
     </div>
+
+    <script src="~/js/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
