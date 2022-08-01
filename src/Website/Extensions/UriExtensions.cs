@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Html;
+namespace System;
 
-namespace Athena.Website.Extensions;
-
-public static class StringExtensions
+public static class UriExtensions
 {
-    public static HtmlString ToHtmlString(this string @string) =>
-        new HtmlString(@string);
-
     public static Uri ToAbsoluteUri(this string url) =>
         Uri.IsWellFormedUriString(url, UriKind.Absolute) && Uri.TryCreate(url, UriKind.Absolute, out var uri)
             ? uri

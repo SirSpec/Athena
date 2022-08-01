@@ -1,6 +1,6 @@
 using Athena.Domain.Entities;
-using Athena.Website.Extensions;
 using Athena.Website.Models;
+using Microsoft.AspNetCore.Html;
 
 namespace Athena.Website.Services.Mappers;
 
@@ -11,7 +11,7 @@ public class PostMapper : IPostMapper
         {
             PublishingDate = post.PublishingDate.ToHtmlString(),
             Title = post.Title.ToHtmlString(),
-            Body = post.Body.ToHtmlString()
+            Body = post.Body.ToHtmlStringWithCodeBlocks()
         };
 
     public PostTeaserViewModel MapPostTeaserData(Post post) =>
@@ -20,6 +20,6 @@ public class PostMapper : IPostMapper
             Name = post.Id.ToHtmlString(),
             PublishingDate = post.PublishingDate.ToHtmlString(),
             Title = post.Title.ToHtmlString(),
-            Description = post.Description.ToHtmlString()
+            Description = post.Description.ToHtmlStringWithCodeBlocks()
         };
 }

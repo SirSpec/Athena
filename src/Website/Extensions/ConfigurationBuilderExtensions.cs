@@ -1,5 +1,4 @@
 using Azure.Identity;
-using Athena.Website.Extensions;
 using Athena.Website.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;

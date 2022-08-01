@@ -1,4 +1,3 @@
-using Athena.Website.Extensions;
 using Microsoft.Extensions.Options;
 using Athena.Website.Options;
 using Athena.Website.Repositories.Models;
