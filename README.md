@@ -32,6 +32,7 @@ Example body.
 # Tech stack
 - .NET 6
 - ASP.NET Core
+- Azure Bicep
 - GitHub API
 
 # License
