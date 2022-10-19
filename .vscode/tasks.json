@@ -1,0 +1,171 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "detail": "Build Solution",
+            "command": "dotnet",
+            "isBuildCommand": true,
+            "type": "process",
+            "icon": {
+                "id": "extensions"
+            },
+            "args": [
+                "build",
+                "${workspaceFolder}",
+                "/property:GenerateFullPaths=true"
+                // "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test",
+            "detail": "Test Solution",
+            "command": "dotnet",
+            "isTestCommand": true,
+            "type": "process",
+            "icon": {
+                "id": "beaker"
+            },
+            "dependsOn": [
+                "build"
+            ],
+            "args": [
+                "test",
+                "${workspaceFolder}",
+                "/property:GenerateFullPaths=true"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish release",
+            "detail": "Publish artifacts in Release mode",
+            "command": "dotnet",
+            "type": "process",
+            "icon": {
+                "id": "package"
+            },
+            "dependsOn": [
+                "build",
+                "test"
+            ],
+            "args": [
+                "publish",
+                "--configuration",
+                "Release",
+                "${workspaceFolder}/src/Website/Website.csproj",
+                "/property:GenerateFullPaths=true"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish debug",
+            "detail": "Publish artifacts in Debug mode",
+            "command": "dotnet",
+            "type": "process",
+            "icon": {
+                "id": "debug"
+            },
+            "dependsOn": [
+                "build",
+                "test"
+            ],
+            "args": [
+                "publish",
+                "--configuration",
+                "Debug",
+                "${workspaceFolder}/src/Website/Website.csproj",
+                "/property:GenerateFullPaths=true"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "docker-compose up",
+            "type": "docker-compose",
+            "icon": {
+                "id": "arrow-up"
+            },
+            "dependsOn": [
+                "build",
+                "test"
+            ],
+            "dockerCompose": {
+                "up": {
+                    "detached": true,
+                    "build": true
+                },
+                "files": [
+                    "${workspaceFolder}/docker-compose.yml"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "docker-compose down",
+            "type": "docker-compose",
+            "icon": {
+                "id": "arrow-down"
+            },
+            "dockerCompose": {
+                "down": {
+                    "removeImages": "all",
+                    "removeVolumes": true
+                },
+                "files": [
+                    "${workspaceFolder}/docker-compose.yml"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        }
+    ]
+}
