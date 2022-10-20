@@ -66,9 +66,9 @@
                 "id": "package"
             },
             "dependsOn": [
-                "build",
                 "test"
             ],
+            "dependsOrder": "sequence",
             "args": [
                 "publish",
                 "--configuration",
@@ -95,9 +95,9 @@
                 "id": "debug"
             },
             "dependsOn": [
-                "build",
                 "test"
             ],
+            "dependsOrder": "sequence",
             "args": [
                 "publish",
                 "--configuration",
@@ -122,9 +122,9 @@
                 "id": "arrow-up"
             },
             "dependsOn": [
-                "build",
                 "test"
             ],
+            "dependsOrder": "sequence",
             "dockerCompose": {
                 "up": {
                     "detached": true,
