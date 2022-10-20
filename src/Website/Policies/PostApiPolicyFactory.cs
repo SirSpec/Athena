@@ -36,7 +36,7 @@ public class PostApiPolicyFactory : IPostApiPolicyFactory
             .OrResult(message => message.StatusCode == HttpStatusCode.TooManyRequests)
             .CircuitBreakerAsync(
                 handledEventsAllowedBeforeBreaking: _apiOptions.HandledEventsAllowedBeforeBreaking,
-                durationOfBreak: TimeSpan.FromMinutes(_apiOptions.DurationOfBreakInMinutes),
+                durationOfBreak: TimeSpan.FromSeconds(_apiOptions.DurationOfBreakInSeconds),
                 onBreak: (result, timeSpan, context) =>
                 {
                     _postRepositoryLogger.LogError($"Connection to API is onBreak for {timeSpan.TotalMilliseconds}ms.");

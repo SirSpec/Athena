@@ -9,5 +9,5 @@ public class ApiOptions
     public int RetryCount { get; set; }
     public int BaseRetryDelayInSeconds { get; set; }
     public int HandledEventsAllowedBeforeBreaking { get; set; }
-    public int DurationOfBreakInMinutes { get; set; }
+    public int DurationOfBreakInSeconds { get; set; }
 }
