@@ -2,6 +2,11 @@ using Athena.Website.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddJsonFile("appsettings.User.json", optional: true, reloadOnChange: true);
+}
+
 if (builder.Environment.IsProduction())
 {
     builder.Configuration.AddAppConfiguration();

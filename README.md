@@ -29,6 +29,17 @@ Example body.
 {Body}
 ```
 
+# Development environment
+A developer can define a custom `appsettings.User.json` which overrides settings of:
+- `appsettings.{Environment}.json`
+- environmental variables
+
+`appsettings.User.json` is not serialized in GitHub repository
+
+In order to access APIs a developer has to define the following settings:
+- GitHub API: `ApiOptions:AccessToken`
+- Azure App Configuration Service: `AppConfigurationOptions:Endpoint`
+
 # Tech stack
 - .NET 6
 - ASP.NET Core
