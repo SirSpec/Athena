@@ -1,0 +1,19 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.8'
+
+services:
+  web:
+    container_name: web
+    image: athena-dev:latest
+    build:
+      context: .
+      dockerfile: src/Website/Dockerfile
+      args:
+        NET_VERSION: '6.0'
+        CONFIGURATION: Debug
+        ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - 5001:80
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
